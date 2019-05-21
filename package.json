@@ -1,0 +1,49 @@
+{
+  "name": "flowdesign",
+  "version": "1.0.0",
+  "description": "流程设计器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "packez start ./src/index.js -w -c",
+    "build": "packez build ./src/index.js -c",
+    "server": "packez server ./src/index.js -c",
+    "analyzer": "packez analyzer ./src/index.js -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pagedesign/flowdesign.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pagedesign/flowdesign/issues"
+  },
+  "homepage": "https://github.com/pagedesign/flowdesign#readme",
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "babel-preset-packez": "^0.2.0",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
+    "eslint-config-packez": "^0.3.0",
+    "eslint-loader": "^2.1.2",
+    "json5-loader": "^2.0.0",
+    "mini-css-extract-plugin": "^0.6.0",
+    "packez": "^2.0.4",
+    "postcss-flexbugs-fixes": "^4.1.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.6.0",
+    "style-loader": "^0.23.1"
+  },
+  "dependencies": {
+    "jsplumb": "^2.9.3"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
