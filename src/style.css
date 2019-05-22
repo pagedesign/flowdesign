@@ -1,18 +1,18 @@
 .jtk-demo-canvas {
     /* for IE10+ touch devices */
-    touch-action:none;
+    touch-action: none;
     background: url(./bg.png) repeat;
-    width: 800px;
-    height: 600px;
-    margin: 30px auto;
-    border: 1px soid #ccc;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
     overflow: auto;
-    position: relative;
 }
 
 .flowchart-demo .window {
     border: 2px solid #000;
-    background:#FFFF;
+    background: #FFFF;
     width: 80px;
     height: 80px;
     display: flex;
@@ -45,22 +45,22 @@
     /* border: 1px dotted red; */
 }
 
-#flowchartWindow1 {
+#f1 {
     top: 34em;
     left: 5em;
 }
 
-#flowchartWindow2 {
+#f2 {
     top: 7em;
     left: 36em;
 }
 
-#flowchartWindow3 {
+#f3 {
     top: 27em;
     left: 48em;
 }
 
-#flowchartWindow4 {
+#f4 {
     top: 23em;
     left: 22em;
 }
@@ -69,7 +69,9 @@
     z-index: 4;
 }
 
-.flowchart-demo .jtk-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+.flowchart-demo .jtk-endpoint,
+.endpointTargetLabel,
+.endpointSourceLabel {
     z-index: 21;
     cursor: pointer;
 }
@@ -99,10 +101,55 @@
     outline: 4px solid pink !important;
 }
 
-path, .jtk-endpoint {
+path,
+.jtk-endpoint {
     cursor: pointer;
 }
 
 .jtk-overlay {
-    background-color:transparent;
+    background-color: transparent;
+}
+
+.jtk-node {
+    position: relative;
+
+
+}
+
+.jtk-node:focus,
+.jtk-node:active {
+    display: block;
+}
+
+.drag-source {
+    /* display: none; */
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 100px;
+    background: green;
+}
+
+.source-top {
+    bottom: 100%;
+    left: 50%;
+    margin-left: -7px;
+}
+
+.source-bottom {
+    top: 100%;
+    left: 50%;
+    margin-left: -7px;
+}
+
+.source-left {
+    right: 100%;
+    top: 50%;
+    margin-top: -7px;
+}
+
+.source-right {
+    left: 100%;
+    top: 50%;
+    margin-top: -7px;
 }
