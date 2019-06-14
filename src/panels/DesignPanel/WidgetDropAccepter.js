@@ -28,6 +28,7 @@ const spec = {
         if (monitor.didDrop()) {
             return;
         }
+        const designer = component.context;
         const container = component.container;
         const rect = container.getBoundingClientRect();
         const win = container.ownerDocument.defaultView;
@@ -36,17 +37,24 @@ const spec = {
             x: rect.left + win.pageXOffset
         };
 
-        const dragOffset = monitor.getClientOffset();
-
         const dragItem = monitor.getItem();
-        const designer = component.context;
-
+        const isWidgetDragging = dragItem.isWidgetDragging;
         const node = dragItem.item;
 
-        node.x = dragOffset.x - containerOffset.x - node.width / 2;
-        node.y = dragOffset.y - containerOffset.y - node.height / 2;;
+        if (isWidgetDragging) {
+            const dragOffset = monitor.getClientOffset();
+            node.x = dragOffset.x - containerOffset.x - node.width / 2;
+            node.y = dragOffset.y - containerOffset.y - node.height / 2;;
 
-        designer.addItem(node, props.pid);
+            designer.addItem(node, props.pid);
+        } else {
+            const dragOffset = monitor.getDifferenceFromInitialOffset();
+            const dragSourceOffset = monitor.getSourceClientOffset();
+            console.log(dragOffset, dragSourceOffset, 'xxxx')
+            node.x += dragOffset.x;
+            node.y += dragOffset.y;
+            designer.updateItem(node);
+        }
     }
 };
 
