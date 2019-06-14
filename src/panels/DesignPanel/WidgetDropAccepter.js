@@ -43,6 +43,11 @@ const spec = {
 
         if (isWidgetDragging) {
             const dragOffset = monitor.getClientOffset();
+            console.log(monitor.getInitialClientOffset(),
+                monitor.getInitialSourceClientOffset(),
+                monitor.getClientOffset(),
+                monitor.getDifferenceFromInitialOffset(),
+                monitor.getSourceClientOffset(), 'zzzz')
             node.x = dragOffset.x - containerOffset.x - node.width / 2;
             node.y = dragOffset.y - containerOffset.y - node.height / 2;;
 
@@ -50,7 +55,11 @@ const spec = {
         } else {
             const dragOffset = monitor.getDifferenceFromInitialOffset();
             const dragSourceOffset = monitor.getSourceClientOffset();
-            console.log(dragOffset, dragSourceOffset, 'xxxx')
+            console.log(monitor.getInitialClientOffset(),
+                monitor.getInitialSourceClientOffset(),
+                monitor.getClientOffset(),
+                monitor.getDifferenceFromInitialOffset(),
+                monitor.getSourceClientOffset(), 'xxxx')
             node.x += dragOffset.x;
             node.y += dragOffset.y;
             designer.updateItem(node);
