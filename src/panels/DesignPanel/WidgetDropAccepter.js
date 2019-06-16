@@ -8,6 +8,7 @@ import {
     WIDGET_DRAG_DROP_SCOPE
 } from '../../constants';
 import DesignContext from '../../DesignContext';
+import PreviewDragLayer from './PreviewDragLayer';
 
 import PreviewItem from './PreviewItem';
 
@@ -53,16 +54,17 @@ const spec = {
 
             designer.addItem(node, props.pid);
         } else {
-            const dragOffset = monitor.getDifferenceFromInitialOffset();
-            const dragSourceOffset = monitor.getSourceClientOffset();
-            console.log(monitor.getInitialClientOffset(),
-                monitor.getInitialSourceClientOffset(),
-                monitor.getClientOffset(),
-                monitor.getDifferenceFromInitialOffset(),
-                monitor.getSourceClientOffset(), 'xxxx')
-            node.x += dragOffset.x;
-            node.y += dragOffset.y;
-            designer.updateItem(node);
+            // const dragOffset = monitor.getDifferenceFromInitialOffset();
+            // // const dragSourceOffset = monitor.getSourceClientOffset();
+            // // console.log(monitor.getInitialClientOffset(),
+            // //     monitor.getInitialSourceClientOffset(),
+            // //     monitor.getClientOffset(),
+            // //     monitor.getDifferenceFromInitialOffset(),
+            // //     monitor.getSourceClientOffset(), 'xxxx')
+            // node.x += dragOffset.x;
+            // node.y += dragOffset.y;
+            // console.log('drop', node.x, node.y)
+            // designer.updateItem(node);
         }
     }
 };
@@ -125,6 +127,7 @@ class WidgetDropAccepter extends React.Component {
                 {
                     isOver && dragItem.isWidgetDragging ? this.rendrePlaceholder() : null
                 }
+                <PreviewDragLayer />
             </div>
         );
     }

@@ -13,8 +13,6 @@ export default function (props) {
             className={classString}
         >
             <label className="widget-preview-title">{item.title}</label>
-            <span className="widget-preview-input">{item.placeholder}</span>
-            {/* <span className="widget-preview-close" onClick={onRemove}>x</span> */}
         </div>
     )
 }

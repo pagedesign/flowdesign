@@ -5,6 +5,7 @@ import DesignModel from './DesignModel';
 import WidgetsPanel from './panels/WidgetsPanel';
 import PropertyPanel from './panels/PropertyPanel';
 import DesignPanel from './panels/DesignPanel';
+import WidgetDragLayer from './panels/WidgetDragLayer';
 
 import {
     P_PC,
@@ -52,6 +53,7 @@ export default class Designer extends React.Component {
                         <WidgetsPanel />
                         <DesignPanel />
                         <PropertyPanel />
+                        <WidgetDragLayer />
                     </div>
                 </div>
             </DesignModel>
