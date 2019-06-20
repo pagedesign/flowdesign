@@ -20,8 +20,12 @@ import DesignContext from '../../DesignContext';
 import FlowInstance from './FlowInstance';
 import "./PreviewItem.scss";
 
-const repaintEverything = debounce(function () {
+const repaintEverything = debounce(function (dom) {
     FlowInstance.repaintEverything();
+    // const connections = FlowInstance.getAllConnections();
+
+    // FlowInstance.repaint(dom);
+    // console.log(connections)
 }, 50)
 
 const dragSpec = {
@@ -156,7 +160,7 @@ class WidgetPreviewItem extends React.Component {
         // console.time()
         // FlowInstance.repaint(dom);
         // FlowInstance.repaintEverything();
-        repaintEverything();
+        repaintEverything(dom);
         // console.timeEnd()
 
         console.log('updatePosition', x, y);
