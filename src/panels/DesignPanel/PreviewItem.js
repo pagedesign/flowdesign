@@ -1,8 +1,13 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { getEmptyImage } from 'react-dnd-html5-backend';
+
 import flow from 'lodash/flow';
 import get from 'lodash/get';
+import forEach from 'lodash/forEach';
+
+import debounce from 'lodash/debounce';
+
 import {
     DragSource,
     DropTarget,
@@ -12,6 +17,12 @@ import {
     WIDGET_DRAG_DROP_SCOPE
 } from '../../constants';
 import DesignContext from '../../DesignContext';
+import FlowInstance from './FlowInstance';
+import "./PreviewItem.scss";
+
+const repaintEverything = debounce(function () {
+    FlowInstance.repaintEverything();
+}, 50)
 
 const dragSpec = {
     beginDrag(props, monitor, component) {
@@ -35,12 +46,7 @@ const dragSpec = {
         const dragItem = monitor.getItem();
         const node = dragItem.item;
         const dragOffset = dragItem.differenceFromInitialOffset;
-        // const dragSourceOffset = monitor.getSourceClientOffset();
-        // console.log(monitor.getInitialClientOffset(),
-        //     monitor.getInitialSourceClientOffset(),
-        //     monitor.getClientOffset(),
-        //     monitor.getDifferenceFromInitialOffset(),
-        //     monitor.getSourceClientOffset(), 'xxxx')
+
         node.x = dragOffset.x;
         node.y = dragOffset.y;
         console.log('endDrag', node.x, node.y)
@@ -89,6 +95,51 @@ class WidgetPreviewItem extends React.Component {
                 captureDraggingState: true,
             })
         }
+
+        const dom = findDOMNode(this);
+        const points = this.points;
+
+        // forEach(points, (point, pos) => {
+        //     console.log(point, dom)
+
+
+        //     FlowInstance.makeSource(dom, {
+        //         filter: '.position-' + pos,
+        //         maxConnections: -1,
+        //         endpoint: ["Blank", { radius: 7, cssClass: "small-blue" }],
+        //         connector: ["Flowchart", { stub: [40, 60], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+        //         anchor: "Continuous",
+        //     });
+        //     // FlowInstance.makeSource(point, {/// makeSource 激活某元素具有生产连接线的功能
+        //     //     parent: dom,			// 连接线的依附目标
+        //     //     anchor: "Continuous",
+        //     //     connectorStyle: { stroke: "#5c96bc", strokeWidth: 2, outlineStroke: "transparent", outlineWidth: 4 },
+        //     //     connectionType: "basic",
+        //     //     extract: {
+        //     //         "action": "the-action"
+        //     //     },
+        //     //     maxConnections: -1,
+        //     //     onMaxConnections: function (info, e) {
+        //     //         alert("Maximum connections (" + info.maxConnections + ") reached");
+        //     //     }
+        //     // });
+        // });
+
+        FlowInstance.makeSource(dom, {
+            filter: '.flow-source-point',
+            maxConnections: -1,
+            endpoint: ["Blank", { radius: 7, cssClass: "small-blue" }],
+            connector: ["Flowchart", { stub: [40, 60], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+            anchor: "Continuous",
+        });
+
+        // configure the .smallWindows as targets.
+        FlowInstance.makeTarget(dom, {
+            dropOptions: { hoverClass: "hover" },
+            connector: ["Flowchart", { stub: [40, 60], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+            anchor: "Continuous",
+            endpoint: ["Blank", { radius: 11, cssClass: "large-green" }]
+        });
     }
 
     updatePosition(x = 0, y = 0) {
@@ -98,14 +149,40 @@ class WidgetPreviewItem extends React.Component {
             return
         };
 
+        const dom = findDOMNode(this);
+
         this.domRef.style.left = x + 'px';
         this.domRef.style.top = y + 'px';
+        // console.time()
+        // FlowInstance.repaint(dom);
+        // FlowInstance.repaintEverything();
+        repaintEverything();
+        // console.timeEnd()
+
         console.log('updatePosition', x, y);
     }
 
     saveRef = (dom) => {
         this.domRef = dom;
     }
+
+    points = {}
+
+    renderSourcePoint(position = 'bottom') {
+        return (
+            <div
+                ref={dom => {
+                    this.points[position] = dom;
+                }}
+                className={
+                    cx("flow-source-point", "position-" + position)
+                }
+            >
+            </div>
+        );
+    }
+
+
 
     render() {
         const { connectDropTarget, connectDragSource, isDragging, isOver, widget, item, dragItem } = this.props;
@@ -115,7 +192,7 @@ class WidgetPreviewItem extends React.Component {
         return (
             <div
                 ref={this.saveRef}
-
+                id={item.fieldId}
                 className={cx({
                     "widget-preview-item-wrapper": true,
                     "droppable": isOver,
@@ -143,6 +220,10 @@ class WidgetPreviewItem extends React.Component {
                     <widget.Preview item={item} designer={designer} />
                     <span className="widget-preview-close" onClick={this.handleRemove}>x</span>
                 </div>
+                {this.renderSourcePoint('top')}
+                {this.renderSourcePoint('left')}
+                {this.renderSourcePoint('right')}
+                {this.renderSourcePoint('bottom')}
             </div>
         );
     }

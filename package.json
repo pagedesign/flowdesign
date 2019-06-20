@@ -32,6 +32,7 @@
         "@babel/runtime-corejs2": "^7.4.5",
         "bplokjs-dom-utils": "^1.0.7",
         "classnames": "^2.2.6",
+        "jsplumb": "^2.10.0",
         "lodash": "^4.17.11",
         "prop-types": "^15.7.2",
         "react": "^16.8.6",

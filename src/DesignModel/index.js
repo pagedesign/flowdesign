@@ -188,6 +188,12 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
+    connect(sourceId, targetId) {
+        const sourceNode = this.getItem(sourceId);
+        const targetNode = this.getItem(targetId);
+
+    }
+
     getModel() {
         return {
             //   isWidget: this.isWidget.bind(this),
@@ -206,6 +212,7 @@ export default class DesignModel extends React.Component {
             getItem: this.getItem.bind(this),
             insertBefore: this.insertBefore.bind(this),
             insertAfter: this.insertAfter.bind(this),
+            connect: this.connect.bind(this),
         };
     }
 
