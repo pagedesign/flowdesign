@@ -9,7 +9,7 @@ const layerStyles = {
     top: 0,
     width: 90,
     height: 60,
-    border: '1px dashed red'
+    border: '2px solid #8f8f8f'
 }
 
 function getItemStyles(props) {

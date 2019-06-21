@@ -68,13 +68,13 @@
     .design-panel {
         flex: 1;
         overflow: auto;
-        padding: 10px 0;
+        padding: 30px 0;
         background: #efefef;
 
         .design-layout-container {
             position: relative;
-            width: 800px;
-            height: 600px;
+            width: 900px;
+            height: 2600px;
             padding-bottom: 60px;
             margin: 0 auto;
             overflow: auto;
@@ -191,17 +191,19 @@
                     }
 
                     &:hover {
-                        > .widget-preview-close {
+                        >.widget-preview-close {
                             display: block;
                         }
                     }
 
                     &-selected {
-                        > .widget-preview-item-inner {
+                        z-index: 3;
+
+                        >.widget-preview-item-inner {
                             border-color: #007ed3;
                         }
 
-                        > .widget-preview-close {
+                        >.widget-preview-close {
                             display: block;
                         }
                     }
@@ -256,4 +258,20 @@
     padding-bottom: 10px;
     border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
+}
+
+.connection-close {
+    display: none;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 100px;
+    background: #f94747;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.jtk-hover .connection-close {
+    display: block;
 }

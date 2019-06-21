@@ -4,6 +4,9 @@ import Widget from './Widget';
 
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import differenceBy from 'lodash/differenceBy';
+
+import { jsPlumb } from 'jsplumb';
 
 export default class DesignModel extends React.Component {
     static getDerivedStateFromProps(props, state) {
@@ -26,6 +29,7 @@ export default class DesignModel extends React.Component {
         onChange: null,
         widgets: [],
         items: [],
+        relations: []
     }
 
     state = {
@@ -35,12 +39,90 @@ export default class DesignModel extends React.Component {
         activeId: null
     }
 
-    onChange(items) {
+    constructor(...args) {
+        super(...args);
+
+        this.flowInstance = this.getFlowInstance();
+    }
+
+    getFlowInstance() {
+
+        if (this.flowInstance) return this.flowInstance;
+
+        const instance = jsPlumb.getInstance({
+            // drag options
+            DragOptions: { cursor: "pointer", zIndex: 2000 },
+            // default to a gradient stroke from blue to green.
+            PaintStyle: {
+                stroke: "#000",
+                strokeWidth: 2
+            },
+            Container: "canvas",
+            ConnectionOverlays: [
+                ["Arrow", {
+                    location: 1,
+                    visible: true,
+                    width: 11,
+                    length: 11,
+                    id: "ARROW",
+                    events: {
+                        click: function () { alert("you clicked on the arrow overlay") }
+                    }
+                }],
+                ["Label",
+                    {
+                        label: "<span class='connection-close'>x</span>", id: "label", cssClass: "connection-line", events: {
+                            click: (conn) => {
+                                instance.deleteConnection(conn.component);
+                            }
+                        }
+                    }
+                ],
+            ],
+            //鼠标经过样式
+            HoverPaintStyle: { stroke: "#ec9f2e" },
+        });
+
+        instance.bind("connection", (conn) => {
+
+            //查看被连接的两个点间是否已经连接过
+            var conns = instance.getConnections({
+                source: conn.sourceId,
+                target: conn.targetId
+            });
+            //如果大于1条或链接本身，则不连接
+            if (conns.length > 1 || conn.sourceId === conn.targetId) {
+                instance.deleteConnection(conn.connection);
+            } else {
+                this.onChange()
+            }
+
+        });
+
+        return instance;
+    }
+
+    onChange(items, relations) {
         const props = this.props;
         const { onChange } = props;
 
+        if (!items) {
+            items = this.getAllItems();
+        }
+
+        if (!relations) {
+            relations = this.flowInstance.getAllConnections();
+            relations = relations.map(conn => {
+                return {
+                    sourceId: conn.sourceId,
+                    targetId: conn.targetId
+                }
+            });
+            console.log(relations, 'abcc')
+        }
+
         if (onChange) {
-            onChange(items);
+            onChange(items, relations);
         }
     }
 
@@ -137,6 +219,16 @@ export default class DesignModel extends React.Component {
             return !shouldRemove;
         });
 
+        const allConns = this.flowInstance.getAllConnections();
+
+        console.log(allConns, fieldId, 'removeItem');
+
+        allConns.forEach(conn => {
+            if (conn.sourceId === fieldId || conn.targetId === fieldId) {
+                this.flowInstance.deleteConnection(conn);
+            }
+        })
+
         this.onChange(ret);
     }
 
@@ -188,14 +280,9 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
-    connect(sourceId, targetId) {
-        const sourceNode = this.getItem(sourceId);
-        const targetNode = this.getItem(targetId);
-
-    }
-
     getModel() {
         return {
+            flowInstance: this.flowInstance,
             //   isWidget: this.isWidget.bind(this),
             getWidget: this.getWidget.bind(this),
             getWidgets: this.getWidgets.bind(this),
@@ -212,8 +299,63 @@ export default class DesignModel extends React.Component {
             getItem: this.getItem.bind(this),
             insertBefore: this.insertBefore.bind(this),
             insertAfter: this.insertAfter.bind(this),
-            connect: this.connect.bind(this),
         };
+    }
+
+
+    diffNodeRelactions() {
+        const { relations } = this.props;
+        const conns = this.flowInstance.getAllConnections();
+
+        const newConns = differenceBy(relations, conns, (conn) => {
+            return [conn.sourceId, conn.targetId].join('->');
+        });
+
+        const delConns = differenceBy(conns, relations, (conn) => {
+            return [conn.sourceId, conn.targetId].join('->');
+        });
+
+        if (newConns.length) {
+            this.connectNodes(newConns);
+        }
+
+        if (delConns.length) {
+            this.connectNodes(delConns);
+        }
+
+    }
+
+    componentDidUpdate() {
+
+        this.diffNodeRelactions();
+
+    }
+
+    connectNodes(conns = []) {
+        console.log('connectNodes', conns)
+        conns.forEach(conn => {
+            this.flowInstance.connect({
+                source: conn.sourceId,
+                target: conn.targetId,
+            })
+        })
+    }
+
+    deleteConns(conns = []) {
+        conns.forEach(conn => {
+            this.flowInstance.deleteConnection(conn.connection);
+        });
+    }
+
+    componentDidMount() {
+        this.diffNodeRelactions();
+
+        // this.flowInstance.bind("click", (c) => {
+        //     this.flowInstance.deleteConnection(c);
+        //     this.onChange()
+        // });
+
+
     }
 
     render() {

@@ -26,8 +26,7 @@ class PreviewDragLayer extends React.Component {
 
         const dragNode = dragItem.item;
         const update = dragItem.updatePosition;
-
-        console.log(dragOffset, currentOffset, initialClientOffset, isDragging, 'abcc')
+        // console.log(dragOffset, currentOffset, initialClientOffset, isDragging, 'abcc')
 
         dragItem.differenceFromInitialOffset = {
             x: dragNode.x + dragOffset.x,

@@ -2,12 +2,6 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 
-import flow from 'lodash/flow';
-import get from 'lodash/get';
-import forEach from 'lodash/forEach';
-
-import debounce from 'lodash/debounce';
-
 import {
     DragSource,
     DropTarget,
@@ -17,16 +11,7 @@ import {
     WIDGET_DRAG_DROP_SCOPE
 } from '../../constants';
 import DesignContext from '../../DesignContext';
-import FlowInstance from './FlowInstance';
 import "./PreviewItem.scss";
-
-const repaintEverything = debounce(function (dom) {
-    FlowInstance.repaintEverything();
-    // const connections = FlowInstance.getAllConnections();
-
-    // FlowInstance.repaint(dom);
-    // console.log(connections)
-}, 50)
 
 const dragSpec = {
     beginDrag(props, monitor, component) {
@@ -53,7 +38,7 @@ const dragSpec = {
 
         node.x = dragOffset.x;
         node.y = dragOffset.y;
-        console.log('endDrag', node.x, node.y)
+
         designer.updateItem(node);
     }
 };
@@ -85,11 +70,12 @@ class WidgetPreviewItem extends React.Component {
     handleRemove = () => {
         const designer = this.context;
         const { item } = this.props;
-        designer.removeItem(item.fieldId)
+        designer.removeItem(item.fieldId);
     }
 
     componentDidMount() {
         const { connectDragPreview } = this.props
+        const designer = this.context;
         if (connectDragPreview) {
             // Use empty image as a drag preview so browsers don't draw it
             // and we can draw whatever we want on the custom drag layer instead.
@@ -101,46 +87,19 @@ class WidgetPreviewItem extends React.Component {
         }
 
         const dom = findDOMNode(this);
-        const points = this.points;
 
-        // forEach(points, (point, pos) => {
-        //     console.log(point, dom)
-
-
-        //     FlowInstance.makeSource(dom, {
-        //         filter: '.position-' + pos,
-        //         maxConnections: -1,
-        //         endpoint: ["Blank", { radius: 7, cssClass: "small-blue" }],
-        //         connector: ["Flowchart", { stub: [40, 60], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
-        //         anchor: "Continuous",
-        //     });
-        //     // FlowInstance.makeSource(point, {/// makeSource 激活某元素具有生产连接线的功能
-        //     //     parent: dom,			// 连接线的依附目标
-        //     //     anchor: "Continuous",
-        //     //     connectorStyle: { stroke: "#5c96bc", strokeWidth: 2, outlineStroke: "transparent", outlineWidth: 4 },
-        //     //     connectionType: "basic",
-        //     //     extract: {
-        //     //         "action": "the-action"
-        //     //     },
-        //     //     maxConnections: -1,
-        //     //     onMaxConnections: function (info, e) {
-        //     //         alert("Maximum connections (" + info.maxConnections + ") reached");
-        //     //     }
-        //     // });
-        // });
-
-        FlowInstance.makeSource(dom, {
+        designer.flowInstance.makeSource(dom, {
             filter: '.flow-source-point',
             maxConnections: -1,
             endpoint: ["Blank", { radius: 7, cssClass: "small-blue" }],
-            connector: ["Flowchart", { stub: [40, 60], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+            connector: ["Flowchart", { stub: [0, 0], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
             anchor: "Continuous",
         });
 
         // configure the .smallWindows as targets.
-        FlowInstance.makeTarget(dom, {
+        designer.flowInstance.makeTarget(dom, {
             dropOptions: { hoverClass: "hover" },
-            connector: ["Flowchart", { stub: [40, 60], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+            connector: ["Flowchart", { stub: [0, 0], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
             anchor: "Continuous",
             endpoint: ["Blank", { radius: 11, cssClass: "large-green" }]
         });
@@ -148,36 +107,26 @@ class WidgetPreviewItem extends React.Component {
 
     updatePosition(x = 0, y = 0) {
         const { isDragging } = this.props;
+        const designer = this.context;
         if (!isDragging) {
-            console.log('updatePosition is not dragging')
             return
         };
 
-        const dom = findDOMNode(this);
-
         this.domRef.style.left = x + 'px';
         this.domRef.style.top = y + 'px';
-        // console.time()
-        // FlowInstance.repaint(dom);
-        // FlowInstance.repaintEverything();
-        repaintEverything(dom);
-        // console.timeEnd()
 
-        console.log('updatePosition', x, y);
+        designer.flowInstance.repaintEverything();
+
     }
 
     saveRef = (dom) => {
         this.domRef = dom;
     }
 
-    points = {}
 
     renderSourcePoint(position = 'bottom') {
         return (
             <div
-                ref={dom => {
-                    this.points[position] = dom;
-                }}
                 className={
                     cx("flow-source-point", "position-" + position)
                 }
@@ -185,8 +134,6 @@ class WidgetPreviewItem extends React.Component {
             </div>
         );
     }
-
-
 
     render() {
         const { connectDropTarget, connectDragSource, isDragging, isOver, widget, item, dragItem } = this.props;

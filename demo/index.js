@@ -7,16 +7,28 @@ import widgets from './widgets';
 
 import '../src/style';
 
+function getMetadata() {
+    const r = localStorage.getItem('_m_');
+    return r ? JSON.parse(r) : {
+        items: [],
+        relations: [],
+    }
+}
+
 function App() {
-    const [metadata, onMetadataChange] = React.useState({
-        items: []
-    })
+    const [metadata, onMetadataChange] = React.useState(getMetadata());
+
+    localStorage.setItem('_m_', JSON.stringify(metadata));
+
+    console.log(metadata)
 
     return (
         <div style={{
-            margin: "30px auto",
-            width: 1400,
-            minHeight: 500
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
         }}>
             <FormDesigner
                 widgets={widgets}

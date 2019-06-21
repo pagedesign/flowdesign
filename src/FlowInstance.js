@@ -27,23 +27,19 @@ const instance = jsPlumb.getInstance({
                 click: function () { alert("you clicked on the arrow overlay") }
             }
         }],
-        ["Label", {
-            location: 0.1,
-            id: "label",
-            cssClass: "aLabel",
-            events: {
-                tap: function () { alert("hey"); }
+        ["Label",
+            {
+                label: "<span class='connection-close'>x</span>", id: "label", cssClass: "connection-line", events: {
+                    click: function (conn) {
+                        console.log(conn)
+                        alert("you clicked on the arrow overlay")
+                    }
+                }
             }
-        }]
+        ],
     ],
-});
-
-instance.bind("dblclick", function (info) {
-    instance.detach(info);
-});
-instance.bind("connection", function (...a) {
-    console.log(...a)
-
+    //鼠标经过样式
+    HoverPaintStyle: { stroke: "#ec9f2e" },
 });
 
 export default instance;

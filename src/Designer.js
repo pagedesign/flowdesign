@@ -25,16 +25,18 @@ export default class Designer extends React.Component {
         platform: P_PC,
         widgets: [],
         metadata: {
+            relations: [],
             items: [],
         }
     }
 
-    handleModelChange = (items) => {
+    handleModelChange = (items, relations) => {
         const { onChange, metadata } = this.props;
 
         onChange && onChange({
             ...metadata,
             items,
+            relations,
         })
     }
 
@@ -44,6 +46,7 @@ export default class Designer extends React.Component {
         return (
             <DesignModel
                 widgets={widgets}
+                relations={metadata.relations}
                 items={metadata.items}
                 platform={platform}
                 onChange={this.handleModelChange}

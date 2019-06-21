@@ -6,7 +6,7 @@ export default class DesignPanel extends React.Component {
     static contextType = DesignContext;
 
     render() {
-        const pid = null
+        const pid = null;
         const designer = this.context;
         const items = designer.getItems(pid);
 

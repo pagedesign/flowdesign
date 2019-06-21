@@ -18,13 +18,7 @@ const spec = {
         // return dragItem.isWidgetDragging;
         return true;
     },
-    // hover(props, monitor, component) {
-    //      if(!monitor.canDrop()) return;
-    //     const isOver = monitor.isOver({ shallow: true });
-    //     if (isOver) {
-    //         console.log('WidgetDropAccepter over...')
-    //     }
-    // },
+
     drop(props, monitor, component) {
         if (monitor.didDrop()) {
             return;
@@ -44,27 +38,11 @@ const spec = {
 
         if (isWidgetDragging) {
             const dragOffset = monitor.getClientOffset();
-            console.log(monitor.getInitialClientOffset(),
-                monitor.getInitialSourceClientOffset(),
-                monitor.getClientOffset(),
-                monitor.getDifferenceFromInitialOffset(),
-                monitor.getSourceClientOffset(), 'zzzz')
+
             node.x = dragOffset.x - containerOffset.x - node.width / 2;
             node.y = dragOffset.y - containerOffset.y - node.height / 2;;
 
             designer.addItem(node, props.pid);
-        } else {
-            // const dragOffset = monitor.getDifferenceFromInitialOffset();
-            // // const dragSourceOffset = monitor.getSourceClientOffset();
-            // // console.log(monitor.getInitialClientOffset(),
-            // //     monitor.getInitialSourceClientOffset(),
-            // //     monitor.getClientOffset(),
-            // //     monitor.getDifferenceFromInitialOffset(),
-            // //     monitor.getSourceClientOffset(), 'xxxx')
-            // node.x += dragOffset.x;
-            // node.y += dragOffset.y;
-            // console.log('drop', node.x, node.y)
-            // designer.updateItem(node);
         }
     }
 };
@@ -84,15 +62,6 @@ class WidgetDropAccepter extends React.Component {
 
     static defaultProps = {
         pid: null,
-    }
-
-    rendrePlaceholder() {
-        const { dragItem } = this.props;
-        const { widget, item } = dragItem
-
-        return (
-            <widget.PlaceholderPreview widget={widget} item={item} />
-        );
     }
 
     renderItem = (item, i) => {
@@ -123,9 +92,6 @@ class WidgetDropAccepter extends React.Component {
                 })}>
                 {
                     items.map(this.renderItem)
-                }
-                {
-                    isOver && dragItem.isWidgetDragging ? this.rendrePlaceholder() : null
                 }
                 <PreviewDragLayer />
             </div>
