@@ -74,6 +74,7 @@ export default class DesignModel extends React.Component {
                         label: "<span class='connection-close'>x</span>", id: "label", cssClass: "connection-line", events: {
                             click: (conn) => {
                                 instance.deleteConnection(conn.component);
+                                this.onChange();
                             }
                         }
                     }
@@ -118,7 +119,7 @@ export default class DesignModel extends React.Component {
                     targetId: conn.targetId
                 }
             });
-            console.log(relations, 'abcc')
+            // console.log(relations, 'abcc')
         }
 
         if (onChange) {
