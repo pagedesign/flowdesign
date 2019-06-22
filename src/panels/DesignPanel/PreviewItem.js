@@ -99,7 +99,7 @@ class WidgetPreviewItem extends React.Component {
         // configure the .smallWindows as targets.
         designer.flowInstance.makeTarget(dom, {
             dropOptions: { hoverClass: "hover" },
-            connector: ["Flowchart", { stub: [0, 0], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+            connector: ["Flowchart", { stub: [100, 0], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
             anchor: "Continuous",
             endpoint: ["Blank", { radius: 11, cssClass: "large-green" }]
         });

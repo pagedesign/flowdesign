@@ -221,9 +221,9 @@ export default class DesignModel extends React.Component {
 
         const allConns = this.flowInstance.getAllConnections();
 
-        console.log(allConns, fieldId, 'removeItem');
-
-        allConns.forEach(conn => {
+        //注jsPlumb返回的元对象引用，在删除过程中使用splice删除导致forEach漏删问题
+        //copy出来
+        [...allConns].forEach(conn => {
             if (conn.sourceId === fieldId || conn.targetId === fieldId) {
                 this.flowInstance.deleteConnection(conn);
             }
