@@ -359,9 +359,9 @@ export default class DesignModel extends React.Component {
 
     }
 
-    componentWillUnmount() {
-        this.flowInstance.deleteEveryConnection();
-    }
+    // componentWillUnmount() {
+    //     this.flowInstance.deleteEveryConnection();
+    // }
 
     render() {
         const { children } = this.props;
