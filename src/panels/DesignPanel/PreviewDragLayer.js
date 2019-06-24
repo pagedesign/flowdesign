@@ -1,7 +1,7 @@
 import React from 'react';
 import { DragLayer } from 'react-dnd';
 import DesignContext from '../../DesignContext';
-import "./PreviewDragLayer.scss";
+// import "./PreviewDragLayer.scss";
 
 function collect(monitor) {
     return {

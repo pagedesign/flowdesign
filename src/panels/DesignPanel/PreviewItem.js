@@ -11,7 +11,7 @@ import {
     WIDGET_DRAG_DROP_SCOPE
 } from '../../constants';
 import DesignContext from '../../DesignContext';
-import "./PreviewItem.scss";
+// import "./PreviewItem.scss";
 
 const dragSpec = {
     beginDrag(props, monitor, component) {
