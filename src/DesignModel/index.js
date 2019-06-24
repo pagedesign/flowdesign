@@ -321,7 +321,7 @@ export default class DesignModel extends React.Component {
         }
 
         if (delConns.length) {
-            this.connectNodes(delConns);
+            this.deleteConns(delConns);
         }
 
     }
@@ -357,6 +357,10 @@ export default class DesignModel extends React.Component {
         // });
 
 
+    }
+
+    componentWillUnmount() {
+        this.flowInstance.deleteEveryConnection();
     }
 
     render() {
