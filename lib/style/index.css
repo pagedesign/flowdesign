@@ -62,15 +62,15 @@
     -ms-flex: 1 1;
         flex: 1 1;
     overflow: auto;
-    padding: 10px 0;
+    padding: 30px 0;
     background: #efefef; }
     .csos-flow-designer-container .design-panel .design-layout-container {
       position: relative;
-      width: 800px;
-      height: 600px;
+      width: 900px;
+      height: 2600px;
       padding-bottom: 60px;
       margin: 0 auto;
-      overflow: auto;
+      overflow: visible;
       background: #fbfbfb;
       -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
               box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
@@ -137,10 +137,12 @@
             line-height: 18px; }
           .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item:hover > .widget-preview-close {
             display: block; }
-          .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected > .widget-preview-item-inner {
-            border-color: #007ed3; }
-          .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected > .widget-preview-close {
-            display: block; }
+          .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected {
+            z-index: 3; }
+            .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected > .widget-preview-item-inner {
+              border-color: #007ed3; }
+            .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected > .widget-preview-close {
+              display: block; }
         .csos-flow-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .drag-item-placeholder:first-child {
           padding-top: 0;
           margin-bottom: 15px; }
@@ -178,3 +180,17 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #ccc;
   margin-bottom: 10px; }
+
+.connection-close {
+  display: none;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 100px;
+  background: #f94747;
+  color: #FFF;
+  cursor: pointer; }
+
+.jtk-hover .connection-close {
+  display: block; }
