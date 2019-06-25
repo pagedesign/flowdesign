@@ -316,12 +316,12 @@ export default class DesignModel extends React.Component {
             return [conn.sourceId, conn.targetId].join('->');
         });
 
-        if (newConns.length) {
-            this.connectNodes(newConns);
-        }
-
         if (delConns.length) {
             this.deleteConns(delConns);
+        }
+
+        if (newConns.length) {
+            this.connectNodes(newConns);
         }
 
     }

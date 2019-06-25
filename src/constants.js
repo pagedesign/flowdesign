@@ -4,7 +4,7 @@ const P_PC = 1;
 const P_MOBILE = 2;
 const P_IPAD = 3;
 
-const WIDGET_DRAG_DROP_SCOPE = '__WIDGET_DRAG_DROP_SCOPE__';
+const WIDGET_DRAG_DROP_SCOPE = '__WIDGET_DRAG_DROP_SCOPE1__';
 
 export {
     P_PC,
