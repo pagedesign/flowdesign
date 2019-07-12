@@ -1,16 +1,11 @@
-import React from 'react';
-import { findDOMNode } from 'react-dom';
-import { getEmptyImage } from 'react-dnd-html5-backend';
+import React from "react";
+import { findDOMNode } from "react-dom";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
-import {
-    DragSource,
-    DropTarget,
-} from 'react-dnd';
-import cx from 'classnames';
-import {
-    WIDGET_DRAG_DROP_SCOPE
-} from '../../constants';
-import DesignContext from '../../DesignContext';
+import { DragSource, DropTarget } from "react-dnd";
+import cx from "classnames";
+import { WIDGET_DRAG_DROP_SCOPE } from "../../constants";
+import DesignContext from "../../DesignContext";
 // import "./PreviewItem.scss";
 
 const dragSpec = {
@@ -47,16 +42,15 @@ const dragCollect = (connect, monitor) => {
     return {
         connectDragSource: connect.dragSource(),
         connectDragPreview: connect.dragPreview(),
-        isDragging: monitor.isDragging(),
+        isDragging: monitor.isDragging()
     };
-}
+};
 class WidgetPreviewItem extends React.Component {
-
     static contextType = DesignContext;
 
     state = {
-        placeholderPosition: 'none', //none after before top bottom
-    }
+        placeholderPosition: "none" //none after before top bottom
+    };
 
     handlePreviewClick(item, e) {
         if (e.isDefaultPrevented()) {
@@ -71,10 +65,10 @@ class WidgetPreviewItem extends React.Component {
         const designer = this.context;
         const { item } = this.props;
         designer.removeItem(item.fieldId);
-    }
+    };
 
     componentDidMount() {
-        const { connectDragPreview } = this.props
+        const { connectDragPreview } = this.props;
         const designer = this.context;
         if (connectDragPreview) {
             // Use empty image as a drag preview so browsers don't draw it
@@ -82,24 +76,40 @@ class WidgetPreviewItem extends React.Component {
             connectDragPreview(getEmptyImage(), {
                 // IE fallback: specify that we'd rather screenshot the node
                 // when it already knows it's being dragged so we can hide it with CSS.
-                captureDraggingState: true,
-            })
+                captureDraggingState: true
+            });
         }
 
         const dom = findDOMNode(this);
 
         designer.flowInstance.makeSource(dom, {
-            filter: '.flow-source-point',
+            filter: ".flow-source-point",
             maxConnections: -1,
             endpoint: ["Blank", { radius: 7, cssClass: "small-blue" }],
-            connector: ["Flowchart", { stub: [0, 0], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
-            anchor: "Continuous",
+            connector: [
+                "Straight",
+                {
+                    stub: [0, 0],
+                    gap: 0,
+                    cornerRadius: 5,
+                    alwaysRespectStubs: true
+                }
+            ],
+            anchor: "Continuous"
         });
 
         // configure the .smallWindows as targets.
         designer.flowInstance.makeTarget(dom, {
             dropOptions: { hoverClass: "hover" },
-            connector: ["Flowchart", { stub: [100, 0], gap: 0, cornerRadius: 5, alwaysRespectStubs: true }],
+            connector: [
+                "Straight",
+                {
+                    stub: [100, 0],
+                    gap: 0,
+                    cornerRadius: 5,
+                    alwaysRespectStubs: true
+                }
+            ],
             anchor: "Continuous",
             endpoint: ["Blank", { radius: 11, cssClass: "large-green" }]
         });
@@ -109,34 +119,35 @@ class WidgetPreviewItem extends React.Component {
         const { isDragging } = this.props;
         const designer = this.context;
         if (!isDragging) {
-            return
-        };
+            return;
+        }
 
-        this.domRef.style.left = x + 'px';
-        this.domRef.style.top = y + 'px';
+        this.domRef.style.left = x + "px";
+        this.domRef.style.top = y + "px";
 
         designer.flowInstance.repaintEverything();
-
     }
 
-    saveRef = (dom) => {
+    saveRef = dom => {
         this.domRef = dom;
-    }
+    };
 
-
-    renderSourcePoint(position = 'bottom') {
+    renderSourcePoint(position = "bottom") {
         return (
-            <div
-                className={
-                    cx("flow-source-point", "position-" + position)
-                }
-            >
-            </div>
+            <div className={cx("flow-source-point", "position-" + position)} />
         );
     }
 
     render() {
-        const { connectDropTarget, connectDragSource, isDragging, isOver, widget, item, dragItem } = this.props;
+        const {
+            connectDropTarget,
+            connectDragSource,
+            isDragging,
+            isOver,
+            widget,
+            item,
+            dragItem
+        } = this.props;
         const designer = this.context;
         const activeId = designer.getActiveId();
 
@@ -146,38 +157,44 @@ class WidgetPreviewItem extends React.Component {
                 id={item.fieldId}
                 className={cx({
                     "widget-preview-item-wrapper": true,
-                    "droppable": isOver,
-                    "dragging": isDragging,
+                    droppable: isOver,
+                    dragging: isDragging
                     // "drop-tips": canDrop,
                 })}
-
                 style={{
-                    display: 'inline-block',
+                    display: "inline-block",
                     width: item.width,
                     height: item.height,
                     left: item.x,
-                    top: item.y,
+                    top: item.y
                 }}
-
             >
                 <div
                     ref={connectDragSource}
                     className={cx({
                         "widget-preview-item": true,
-                        "widget-preview-item-selected": activeId === item.fieldId,
+                        "widget-preview-item-selected":
+                            activeId === item.fieldId
                     })}
                     onClick={this.handlePreviewClick.bind(this, item)}
                 >
                     <widget.Preview item={item} designer={designer} />
-                    <span className="widget-preview-close" onClick={this.handleRemove}>x</span>
+                    <span
+                        className="widget-preview-close"
+                        onClick={this.handleRemove}
+                    >
+                        x
+                    </span>
                 </div>
-                {this.renderSourcePoint('top')}
-                {this.renderSourcePoint('left')}
-                {this.renderSourcePoint('right')}
-                {this.renderSourcePoint('bottom')}
+                {this.renderSourcePoint("top")}
+                {this.renderSourcePoint("left")}
+                {this.renderSourcePoint("right")}
+                {this.renderSourcePoint("bottom")}
             </div>
         );
     }
 }
 
-export default DragSource(WIDGET_DRAG_DROP_SCOPE, dragSpec, dragCollect)(WidgetPreviewItem)
+export default DragSource(WIDGET_DRAG_DROP_SCOPE, dragSpec, dragCollect)(
+    WidgetPreviewItem
+);
