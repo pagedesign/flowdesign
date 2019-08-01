@@ -1,16 +1,15 @@
-import React from 'react';
-import DesignContext from '../DesignContext';
-import Widget from './Widget';
+import React from "react";
+import DesignContext from "../DesignContext";
+import Widget from "./Widget";
 
-import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
-import differenceBy from 'lodash/differenceBy';
+import find from "lodash/find";
+import findIndex from "lodash/findIndex";
+import differenceBy from "lodash/differenceBy";
 
-import { jsPlumb } from 'jsplumb';
+import { jsPlumb } from "jsplumb";
 
 export default class DesignModel extends React.Component {
     static getDerivedStateFromProps(props, state) {
-
         const widgetsMap = {};
         const widgets = props.widgets.map(widget => {
             const w = new Widget(widget);
@@ -21,8 +20,8 @@ export default class DesignModel extends React.Component {
         return {
             widgets,
             widgetsMap,
-            items: props.items || [],
-        }
+            items: props.items || []
+        };
     }
 
     static defaultProps = {
@@ -30,14 +29,14 @@ export default class DesignModel extends React.Component {
         widgets: [],
         items: [],
         relations: []
-    }
+    };
 
     state = {
         widgets: [],
         widgetsMap: {},
         items: [],
         activeId: null
-    }
+    };
 
     constructor(...args) {
         super(...args);
@@ -46,7 +45,6 @@ export default class DesignModel extends React.Component {
     }
 
     getFlowInstance() {
-
         if (this.flowInstance) return this.flowInstance;
 
         const instance = jsPlumb.getInstance({
@@ -59,33 +57,41 @@ export default class DesignModel extends React.Component {
             },
             Container: "canvas",
             ConnectionOverlays: [
-                ["Arrow", {
-                    location: 1,
-                    visible: true,
-                    width: 11,
-                    length: 11,
-                    id: "ARROW",
-                    events: {
-                        click: function () { alert("you clicked on the arrow overlay") }
-                    }
-                }],
-                ["Label",
+                [
+                    "Arrow",
                     {
-                        label: "<span class='connection-close'>x</span>", id: "label", cssClass: "connection-line", events: {
-                            click: (conn) => {
+                        location: 1,
+                        visible: true,
+                        width: 11,
+                        length: 11,
+                        id: "ARROW",
+                        events: {
+                            click: function() {
+                                alert("you clicked on the arrow overlay");
+                            }
+                        }
+                    }
+                ],
+                [
+                    "Label",
+                    {
+                        label: "<span class='connection-close'>x</span>",
+                        id: "label",
+                        cssClass: "connection-line",
+                        events: {
+                            click: conn => {
                                 instance.deleteConnection(conn.component);
                                 this.onChange();
                             }
                         }
                     }
-                ],
+                ]
             ],
             //鼠标经过样式
-            HoverPaintStyle: { stroke: "#ec9f2e" },
+            HoverPaintStyle: { stroke: "#ec9f2e" }
         });
 
-        instance.bind("connection", (conn) => {
-
+        instance.bind("connection", conn => {
             //查看被连接的两个点间是否已经连接过
             var conns = instance.getConnections({
                 source: conn.sourceId,
@@ -95,9 +101,8 @@ export default class DesignModel extends React.Component {
             if (conns.length > 1 || conn.sourceId === conn.targetId) {
                 instance.deleteConnection(conn.connection);
             } else {
-                this.onChange()
+                this.onChange();
             }
-
         });
 
         return instance;
@@ -117,7 +122,7 @@ export default class DesignModel extends React.Component {
                 return {
                     sourceId: conn.sourceId,
                     targetId: conn.targetId
-                }
+                };
             });
             // console.log(relations, 'abcc')
         }
@@ -175,7 +180,7 @@ export default class DesignModel extends React.Component {
 
         let currentFieldId = node.$pid;
         let pNode;
-        while (pNode = this.getItem(currentFieldId)) {
+        while ((pNode = this.getItem(currentFieldId))) {
             pids.push(pNode.fieldId);
             currentFieldId = pNode.$pid;
             if (!currentFieldId) break;
@@ -203,6 +208,8 @@ export default class DesignModel extends React.Component {
 
         items.push(item);
 
+        this.setActiveId(item.fieldId);
+
         this.onChange(items);
     }
 
@@ -228,19 +235,19 @@ export default class DesignModel extends React.Component {
             if (conn.sourceId === fieldId || conn.targetId === fieldId) {
                 this.flowInstance.deleteConnection(conn);
             }
-        })
+        });
 
         this.onChange(ret);
     }
 
     getItemIndex(fieldId) {
         const items = this.getAllItems();
-        return findIndex(items, item => item.fieldId === fieldId)
+        return findIndex(items, item => item.fieldId === fieldId);
     }
 
     getItem(fieldId) {
         const items = this.getAllItems();
-        return find(items, item => item.fieldId === fieldId)
+        return find(items, item => item.fieldId === fieldId);
     }
 
     insertBefore(item, fieldId) {
@@ -299,21 +306,20 @@ export default class DesignModel extends React.Component {
             getItemIndex: this.getItemIndex.bind(this),
             getItem: this.getItem.bind(this),
             insertBefore: this.insertBefore.bind(this),
-            insertAfter: this.insertAfter.bind(this),
+            insertAfter: this.insertAfter.bind(this)
         };
     }
-
 
     diffNodeRelactions() {
         const { relations } = this.props;
         const conns = this.flowInstance.getAllConnections();
 
-        const newConns = differenceBy(relations, conns, (conn) => {
-            return [conn.sourceId, conn.targetId].join('->');
+        const newConns = differenceBy(relations, conns, conn => {
+            return [conn.sourceId, conn.targetId].join("->");
         });
 
-        const delConns = differenceBy(conns, relations, (conn) => {
-            return [conn.sourceId, conn.targetId].join('->');
+        const delConns = differenceBy(conns, relations, conn => {
+            return [conn.sourceId, conn.targetId].join("->");
         });
 
         if (delConns.length) {
@@ -323,23 +329,20 @@ export default class DesignModel extends React.Component {
         if (newConns.length) {
             this.connectNodes(newConns);
         }
-
     }
 
     componentDidUpdate() {
-
         this.diffNodeRelactions();
-
     }
 
     connectNodes(conns = []) {
-        console.log('connectNodes', conns)
+        console.log("connectNodes", conns);
         conns.forEach(conn => {
             this.flowInstance.connect({
                 source: conn.sourceId,
-                target: conn.targetId,
-            })
-        })
+                target: conn.targetId
+            });
+        });
     }
 
     deleteConns(conns = []) {
@@ -355,8 +358,6 @@ export default class DesignModel extends React.Component {
         //     this.flowInstance.deleteConnection(c);
         //     this.onChange()
         // });
-
-
     }
 
     // componentWillUnmount() {
@@ -369,6 +370,6 @@ export default class DesignModel extends React.Component {
             <DesignContext.Provider value={this.getModel()}>
                 {children}
             </DesignContext.Provider>
-        )
+        );
     }
 }
