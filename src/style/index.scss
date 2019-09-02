@@ -191,7 +191,7 @@
                     }
 
                     &:hover {
-                        >.widget-preview-close {
+                        > .widget-preview-close {
                             display: block;
                         }
                     }
@@ -199,11 +199,11 @@
                     &-selected {
                         z-index: 3;
 
-                        >.widget-preview-item-inner {
+                        > .widget-preview-item-inner {
                             border-color: #007ed3;
                         }
 
-                        >.widget-preview-close {
+                        > .widget-preview-close {
                             display: block;
                         }
                     }
@@ -268,7 +268,7 @@
     line-height: 20px;
     border-radius: 100px;
     background: #f94747;
-    color: #FFF;
+    color: #fff;
     cursor: pointer;
 }
 
@@ -323,6 +323,16 @@
     }
 }
 
-.widget-preview-item-selected~.flow-source-point {
+.widget-preview-item-selected ~ .flow-source-point {
     display: block;
+}
+
+.node-drag-layer {
+    position: absolute;
+    width: 90px;
+    height: 60px;
+    border: 2px dashed #000;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 10;
+    pointer-events: none;
 }

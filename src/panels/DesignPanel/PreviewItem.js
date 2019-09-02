@@ -12,13 +12,30 @@ const dragSpec = {
     beginDrag(props, monitor, component) {
         const widget = props.widget;
         const item = props.item;
-        const updatePosition = component.updatePosition.bind(component);
+        // const updatePosition = component.updatePosition.bind(component);
+
+        //由于推拽中实时调用jsPlumb的刷新导致卡顿,使用复制方式进行推拽且不进行实时更新节点连线
+        const dragDOM = findDOMNode(component);
+        const nodeTmp = document.createElement("div");
+        nodeTmp.className = "node-drag-layer";
+
+        dragDOM.parentNode.appendChild(nodeTmp);
+
+        nodeTmp.style.width = dragDOM.offsetWidth + "px";
+        nodeTmp.style.height = dragDOM.offsetHeight + "px";
+
+        const updatePosition = (x = 0, y = 0) => {
+            nodeTmp.style.left = x + "px";
+            nodeTmp.style.top = y + "px";
+        };
+
         return {
             isWidgetDragging: false,
             isPreviewDragging: true,
             updatePosition,
             widget: widget,
             item: item,
+            nodeDragLayer: nodeTmp,
             differenceFromInitialOffset: {
                 x: 0,
                 y: 0
@@ -35,6 +52,13 @@ const dragSpec = {
         node.y = dragOffset.y;
 
         designer.updateItem(node);
+        component.updatePosition(dragOffset.x, dragOffset.y);
+
+        //移除复制节点
+        const nodeDragLayer = dragItem.nodeDragLayer;
+        if (nodeDragLayer) {
+            nodeDragLayer.parentNode.removeChild(nodeDragLayer);
+        }
     }
 };
 

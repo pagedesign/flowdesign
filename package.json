@@ -1,11 +1,11 @@
 {
     "name": "flow-design-core",
-    "version": "0.4.0",
+    "version": "0.4.2",
     "description": "流程设计器",
     "main": "lib/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "transform-es src -d lib -c -w",
+        "start": "transform-es src -d lib -c -w --corejs false",
         "demo": "node scripts/server",
         "docs": "node scripts/docs"
     },
