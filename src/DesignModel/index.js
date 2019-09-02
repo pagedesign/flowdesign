@@ -13,7 +13,7 @@ export default class DesignModel extends React.Component {
         const widgetsMap = {};
         const widgets = props.widgets.map(widget => {
             const w = new Widget(widget);
-            widgetsMap[widget.xtype] = w;
+            widgetsMap[w.key] = w;
             return w;
         });
 
@@ -132,9 +132,9 @@ export default class DesignModel extends React.Component {
         }
     }
 
-    getWidget(xtype) {
+    getWidget(key) {
         const { widgetsMap } = this.state;
-        return widgetsMap[xtype] || null;
+        return widgetsMap[key] || null;
     }
 
     // isWidget(widget) {

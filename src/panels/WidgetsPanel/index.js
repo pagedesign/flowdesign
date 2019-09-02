@@ -1,9 +1,8 @@
-import React from 'react';
-import DesignContext from '../../DesignContext';
-import WidgetItem from './WidgetItem';
+import React from "react";
+import DesignContext from "../../DesignContext";
+import WidgetItem from "./WidgetItem";
 
 export default class WidgetsPanel extends React.Component {
-
     static contextType = DesignContext;
 
     render() {
@@ -12,17 +11,11 @@ export default class WidgetsPanel extends React.Component {
 
         return (
             <div className="widgets-panel">
-                <div className="widgets-panel-header">
-                    控件列表
-                </div>
+                <div className="widgets-panel-header">控件列表</div>
                 <div className="widgets-panel-body">
-                    {
-                        widgets.map(widget => {
-                            return (
-                                <WidgetItem key={widget.xtype} widget={widget} />
-                            );
-                        })
-                    }
+                    {widgets.map(widget => {
+                        return <WidgetItem key={widget.key} widget={widget} />;
+                    })}
                 </div>
             </div>
         );

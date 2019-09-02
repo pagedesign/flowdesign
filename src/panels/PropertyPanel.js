@@ -1,5 +1,5 @@
-import React from 'react';
-import DesignContext from '../DesignContext';
+import React from "react";
+import DesignContext from "../DesignContext";
 // import { getWidgetPropertyPanel } from './widgets';
 // import {
 //     Form,
@@ -8,18 +8,17 @@ import DesignContext from '../DesignContext';
 // } from 'components/Form';
 
 export default class PropertyPanel extends React.Component {
-
     static contextType = DesignContext;
 
-    onItemChange = (item) => {
+    onItemChange = item => {
         const designer = this.context;
         const activeItem = designer.getActiveItem();
 
         designer.updateItem({
             ...activeItem,
-            ...item,
+            ...item
         });
-    }
+    };
 
     render() {
         const designer = this.context;
@@ -27,17 +26,19 @@ export default class PropertyPanel extends React.Component {
         if (!activeItem) {
             return (
                 <div className="property-panel">
-                    <div style={{ padding: 30, textAlign: 'center' }}>请先选择控件</div>
+                    <div style={{ padding: 30, textAlign: "center" }}>
+                        请先选择控件
+                    </div>
                 </div>
-            )
+            );
         }
 
-        const widget = designer.getWidget(activeItem.xtype);
+        const widget = designer.getWidget(activeItem.key);
 
         if (!widget) {
             return (
                 <div className="property-panel">
-                    <div style={{ padding: 30, textAlign: 'center' }}>无.</div>
+                    <div style={{ padding: 30, textAlign: "center" }}>无.</div>
                 </div>
             );
         }

@@ -1,16 +1,11 @@
-import React from 'react';
-import {
-    DragSource,
-    DropTarget,
-} from 'react-dnd';
-import cx from 'classnames';
-import {
-    WIDGET_DRAG_DROP_SCOPE
-} from '../../constants';
-import DesignContext from '../../DesignContext';
-import PreviewDragLayer from './PreviewDragLayer';
+import React from "react";
+import { DragSource, DropTarget } from "react-dnd";
+import cx from "classnames";
+import { WIDGET_DRAG_DROP_SCOPE } from "../../constants";
+import DesignContext from "../../DesignContext";
+import PreviewDragLayer from "./PreviewDragLayer";
 
-import PreviewItem from './PreviewItem';
+import PreviewItem from "./PreviewItem";
 
 const spec = {
     canDrop(props, monitor) {
@@ -40,7 +35,7 @@ const spec = {
             const dragOffset = monitor.getClientOffset();
 
             node.x = dragOffset.x - containerOffset.x - node.width / 2;
-            node.y = dragOffset.y - containerOffset.y - node.height / 2;;
+            node.y = dragOffset.y - containerOffset.y - node.height / 2;
 
             designer.addItem(node, props.pid);
         }
@@ -52,32 +47,45 @@ const collect = (connect, monitor) => {
         connectDropTarget: connect.dropTarget(),
         isOver: monitor.isOver({ shallow: true }),
         canDrop: monitor.canDrop(),
-        dragItem: monitor.getItem(),
-    }
-}
+        dragItem: monitor.getItem()
+    };
+};
 
 class WidgetDropAccepter extends React.Component {
-
     static contextType = DesignContext;
 
     static defaultProps = {
-        pid: null,
-    }
+        pid: null
+    };
 
     renderItem = (item, i) => {
         const designer = this.context;
-        const xtype = item.xtype;
-        const widget = designer.getWidget(xtype);
+        const key = item.key;
+        const widget = designer.getWidget(key);
 
-        return <PreviewItem designer={designer} key={item.fieldId} widget={widget} item={item} />
-    }
+        return (
+            <PreviewItem
+                designer={designer}
+                key={item.fieldId}
+                widget={widget}
+                item={item}
+            />
+        );
+    };
 
-    containerRef = (dom) => {
+    containerRef = dom => {
         this.container = dom;
-    }
+    };
 
     render() {
-        const { connectDropTarget, isOver, canDrop, dragItem, items, style = {} } = this.props;
+        const {
+            connectDropTarget,
+            isOver,
+            canDrop,
+            dragItem,
+            items,
+            style = {}
+        } = this.props;
         // const designer = this.context;
         // const items = designer.getItems(pid);
 
@@ -88,15 +96,16 @@ class WidgetDropAccepter extends React.Component {
                 className={cx({
                     "design-layout-container": true,
                     "drag-over": isOver,
-                    "dropable": canDrop,
-                })}>
-                {
-                    items.map(this.renderItem)
-                }
+                    dropable: canDrop
+                })}
+            >
+                {items.map(this.renderItem)}
                 <PreviewDragLayer />
             </div>
         );
     }
 }
 
-export default DropTarget(WIDGET_DRAG_DROP_SCOPE, spec, collect)(WidgetDropAccepter);
+export default DropTarget(WIDGET_DRAG_DROP_SCOPE, spec, collect)(
+    WidgetDropAccepter
+);
