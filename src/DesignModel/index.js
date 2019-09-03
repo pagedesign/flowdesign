@@ -101,6 +101,9 @@ export default class DesignModel extends React.Component {
             if (conns.length > 1 || conn.sourceId === conn.targetId) {
                 instance.deleteConnection(conn.connection);
             } else {
+                if (instance._ignoreEvent) {
+                    return;
+                }
                 this.onChange();
             }
         });
@@ -336,7 +339,7 @@ export default class DesignModel extends React.Component {
     }
 
     connectNodes(conns = []) {
-        console.log("connectNodes", conns);
+        // console.log("connectNodes", conns);
         conns.forEach(conn => {
             this.flowInstance.connect({
                 source: conn.sourceId,
@@ -352,7 +355,12 @@ export default class DesignModel extends React.Component {
     }
 
     componentDidMount() {
+        //初始时不触发onChange
+        this.flowInstance._ignoreEvent = true;
+
         this.diffNodeRelactions();
+
+        this.flowInstance._ignoreEvent = false;
 
         // this.flowInstance.bind("click", (c) => {
         //     this.flowInstance.deleteConnection(c);
